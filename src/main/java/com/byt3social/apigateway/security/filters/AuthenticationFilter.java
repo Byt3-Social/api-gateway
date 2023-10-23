@@ -3,8 +3,10 @@ package com.byt3social.apigateway.security.filters;
 import com.byt3social.apigateway.dto.ColaboradorDTO;
 import com.byt3social.apigateway.dto.OrganizacaoDTO;
 import com.byt3social.apigateway.security.RouteValidator;
+import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.*;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Component
@@ -65,9 +68,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                         exchange = exchange.mutate().request(forwardRequest).build();
                     } catch(HttpClientErrorException e) {
-                        if(e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                            return bloquearRequisicao(exchange);
-                        }
+                        return bloquearRequisicao(exchange);
                     }
                 } else {
                     return bloquearRequisicao(exchange);
@@ -80,11 +81,12 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     private ServerHttpRequest validarTokenOrganizacao(ServerWebExchange exchange, RestTemplate restTemplate, HttpEntity<Map<String, Object>> request) {
         ServerHttpRequest forwardRequest;
-        ResponseEntity<OrganizacaoDTO> responseEntity = restTemplate.exchange(organizacaoTokenValidationUrl, HttpMethod.POST, request, OrganizacaoDTO.class);
+
+        ResponseEntity<OrganizacaoDTO> organizacaoDTOResponseEntity = restTemplate.exchange(organizacaoTokenValidationUrl, HttpMethod.POST, request, OrganizacaoDTO.class);
 
         forwardRequest = exchange.getRequest()
                 .mutate()
-                .header("B3Social-Organizacao", responseEntity.getBody().organizacaoId().toString())
+                .header("B3Social-Organizacao", organizacaoDTOResponseEntity.getBody().organizacaoId().toString())
                 .build();
 
         return forwardRequest;
@@ -92,11 +94,12 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     private ServerHttpRequest validarTokenColaborador(ServerWebExchange exchange, RestTemplate restTemplate, HttpEntity<Map<String, Object>> request) {
         ServerHttpRequest forwardRequest;
-        ResponseEntity<ColaboradorDTO> responseEntity = restTemplate.exchange(colaboradorTokenValidationUrl, HttpMethod.POST, request, ColaboradorDTO.class);
+
+        ResponseEntity<ColaboradorDTO> colaboradorDTOResponseEntity = restTemplate.exchange(colaboradorTokenValidationUrl, HttpMethod.POST, request, ColaboradorDTO.class);
 
         forwardRequest = exchange.getRequest()
                 .mutate()
-                .header("B3Social-Colaborador", responseEntity.getBody().id().toString())
+                .header("B3Social-Colaborador", colaboradorDTOResponseEntity.getBody().id().toString())
                 .build();
 
         return forwardRequest;

@@ -3,10 +3,8 @@ package com.byt3social.apigateway.security.filters;
 import com.byt3social.apigateway.dto.ColaboradorDTO;
 import com.byt3social.apigateway.dto.OrganizacaoDTO;
 import com.byt3social.apigateway.security.RouteValidator;
-import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.*;
@@ -17,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.Map;
 
 @Component
@@ -66,6 +63,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                             return bloquearRequisicao(exchange);
                         }
 
+                        forwardRequest = forwardRequest
+                                .mutate()
+                                .header("B3Social-Logging", exchange.getRequest().getPath().toString().split("/")[1])
+                                .build();
+
                         exchange = exchange.mutate().request(forwardRequest).build();
                     } catch(HttpClientErrorException e) {
                         return bloquearRequisicao(exchange);
@@ -87,6 +89,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         forwardRequest = exchange.getRequest()
                 .mutate()
                 .header("B3Social-Organizacao", organizacaoDTOResponseEntity.getBody().organizacaoId().toString())
+                .header("B3Social-User-Name", organizacaoDTOResponseEntity.getBody().nomeEmpresarial())
                 .build();
 
         return forwardRequest;
@@ -100,6 +103,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         forwardRequest = exchange.getRequest()
                 .mutate()
                 .header("B3Social-Colaborador", colaboradorDTOResponseEntity.getBody().id().toString())
+                .header("B3Social-User-Name", colaboradorDTOResponseEntity.getBody().nome())
                 .build();
 
         return forwardRequest;

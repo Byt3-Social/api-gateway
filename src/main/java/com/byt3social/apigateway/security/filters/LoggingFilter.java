@@ -134,17 +134,9 @@ public class LoggingFilter implements GlobalFilter {
 
         endpoints.put("/documentos-solicitados/*/aws", Map.of(
                         "POST", List.of(
-                                "ENVIAR_DOCUMENTO_SOLICITADO", "Enviou documento solicitado no processo")
-                )
-        );
-
-        endpoints.put("/documentos-solicitados/*/aws", Map.of(
+                                "ENVIAR_DOCUMENTO_SOLICITADO", "Enviou documento solicitado no processo"),
                         "GET", List.of(
-                                "RECUPERAR_DOCUMENTO_SOLICITADO", "Recuperou documento solicitado no processo")
-                )
-        );
-
-        endpoints.put("/documentos-solicitados/*/aws", Map.of(
+                                "RECUPERAR_DOCUMENTO_SOLICITADO", "Recuperou documento solicitado no processo"),
                         "DELETE", List.of(
                                 "REMOVER_DOCUMENTO_ENVIADO", "Removeu documento solicitado enviado")
                 )
@@ -160,11 +152,7 @@ public class LoggingFilter implements GlobalFilter {
 
         endpoints.put("/acoes/arquivos/*", Map.of(
                         "GET", List.of(
-                                "RECUPERAR_ARQUIVO_ACAO", "Recuperou arquivo de uma ação")
-                )
-        );
-
-        endpoints.put("/acoes/arquivos/*", Map.of(
+                                "RECUPERAR_ARQUIVO_ACAO", "Recuperou arquivo de uma ação"),
                         "DELETE", List.of(
                                 "EXCLUIR_ARQUIVO_ACAO", "Excluiu arquivo de uma ação")
                 )
@@ -172,29 +160,17 @@ public class LoggingFilter implements GlobalFilter {
 
         endpoints.put("/acoes-isp", Map.of(
                         "GET", List.of(
-                                "CONSULTAR_ACOES_ISP", "Consultou todas as ações ISP")
-                )
-        );
-
-        endpoints.put("/acoes-isp/*", Map.of(
-                        "GET", List.of(
-                                "CONSULTAR_ACAO_ISP", "Consultou uma ação ISP por ID")
-                )
-        );
-
-        endpoints.put("/acoes-isp", Map.of(
+                                "CONSULTAR_ACOES_ISP", "Consultou todas as ações ISP"),
                         "POST", List.of(
                                 "CADASTRAR_ACAO_ISP", "Cadastrou uma nova ação ISP")
                 )
         );
 
         endpoints.put("/acoes-isp/*", Map.of(
+                        "GET", List.of(
+                                "CONSULTAR_ACAO_ISP", "Consultou uma ação ISP por ID"),
                         "PUT", List.of(
-                                "ATUALIZAR_ACAO_ISP", "Atualizou uma ação ISP por ID")
-                )
-        );
-
-        endpoints.put("/acoes-isp/*", Map.of(
+                                "ATUALIZAR_ACAO_ISP", "Atualizou uma ação ISP por ID"),
                         "DELETE", List.of(
                                 "EXCLUIR_ACAO_ISP", "Excluiu uma ação ISP por ID")
                 )

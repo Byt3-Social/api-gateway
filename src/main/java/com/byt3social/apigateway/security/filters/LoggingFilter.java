@@ -58,18 +58,6 @@ public class LoggingFilter implements GlobalFilter {
                 )
         ));
 
-        endpoints.put("/indicacoes/*/cadastros", Map.of(
-                "POST", List.of(
-                        "SALVAR_FORMULARIO_INDICACAO", "Salvou um formulário de indicação"
-                )
-        ));
-
-        endpoints.put("/indicacoes/*/status", Map.of(
-                "POST", List.of(
-                        "ALTERAR_STATUS_INDICACAO", "Alterou o status de uma indicação"
-                )
-        ));
-
         /* Análise documental */
 
         endpoints.put("/processos", Map.of(
